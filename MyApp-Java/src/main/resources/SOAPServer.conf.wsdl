@@ -1,0 +1,45 @@
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://java.internship.bog.ge/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="SOAPServerService" targetNamespace="http://java.internship.bog.ge/">
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://java.internship.bog.ge/" elementFormDefault="unqualified" targetNamespace="http://java.internship.bog.ge/" version="1.0">
+            <xs:element name="helloWorld" type="tns:helloWorld"/>
+            <xs:element name="helloWorldResponse" type="tns:helloWorldResponse"/>
+            <xs:complexType name="helloWorld">
+                <xs:sequence/>
+            </xs:complexType>
+            <xs:complexType name="helloWorldResponse">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="return" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="helloWorld">
+        <wsdl:part element="tns:helloWorld" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="helloWorldResponse">
+        <wsdl:part element="tns:helloWorldResponse" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="SOAPServer">
+        <wsdl:operation name="helloWorld">
+            <wsdl:input message="tns:helloWorld" name="helloWorld"> </wsdl:input>
+            <wsdl:output message="tns:helloWorldResponse" name="helloWorldResponse"> </wsdl:output>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="SOAPServerServiceSoapBinding" type="tns:SOAPServer">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="helloWorld">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="helloWorld">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="helloWorldResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="SOAPServerService">
+        <wsdl:port binding="tns:SOAPServerServiceSoapBinding" name="SOAPServerPort">
+            <soap:address location="http://localhost:8080/SOAPServer/SOAPServer"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
