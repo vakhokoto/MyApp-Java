@@ -7,8 +7,7 @@ create table players
     first_name    varchar(30)             not null,
     last_name     varchar(30)             not null,
     user_nick     varchar(30) unique      not null,
-    creation_date timestamp default now() not null,
-    unique (first_name, last_name)
+    creation_date timestamp default now() not null
 );
 
 create table games

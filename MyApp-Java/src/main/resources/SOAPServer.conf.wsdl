@@ -1,38 +1,54 @@
-<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://java.internship.bog.ge/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="SOAPServerService" targetNamespace="http://java.internship.bog.ge/">
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:tns="http://java.internship.bog.ge/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="SOAPServerService"
+                  targetNamespace="http://java.internship.bog.ge/">
     <wsdl:types>
-        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://java.internship.bog.ge/" elementFormDefault="unqualified" targetNamespace="http://java.internship.bog.ge/" version="1.0">
-            <xs:element name="helloWorld" type="tns:helloWorld"/>
-            <xs:element name="helloWorldResponse" type="tns:helloWorldResponse"/>
-            <xs:complexType name="helloWorld">
-                <xs:sequence/>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://jaxb.dev.java.net/array"
+                   version="1.0">
+            <xs:complexType final="#all" name="anyTypeArray">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="xs:anyType"/>
+                </xs:sequence>
             </xs:complexType>
-            <xs:complexType name="helloWorldResponse">
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://java.internship.bog.ge/"
+                   xmlns:ns1="http://jaxb.dev.java.net/array" elementFormDefault="unqualified"
+                   targetNamespace="http://java.internship.bog.ge/" version="1.0">
+            <xs:import namespace="http://jaxb.dev.java.net/array"/>
+            <xs:element name="classifyUserData" type="tns:classifyUserData"/>
+            <xs:element name="classifyUserDataResponse" type="tns:classifyUserDataResponse"/>
+            <xs:complexType name="classifyUserData">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="arg0" type="ns1:anyTypeArray"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="classifyUserDataResponse">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="return" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
         </xs:schema>
     </wsdl:types>
-    <wsdl:message name="helloWorld">
-        <wsdl:part element="tns:helloWorld" name="parameters"> </wsdl:part>
+    <wsdl:message name="classifyUserData">
+        <wsdl:part element="tns:classifyUserData" name="parameters"></wsdl:part>
     </wsdl:message>
-    <wsdl:message name="helloWorldResponse">
-        <wsdl:part element="tns:helloWorldResponse" name="parameters"> </wsdl:part>
+    <wsdl:message name="classifyUserDataResponse">
+        <wsdl:part element="tns:classifyUserDataResponse" name="parameters"></wsdl:part>
     </wsdl:message>
     <wsdl:portType name="SOAPServer">
-        <wsdl:operation name="helloWorld">
-            <wsdl:input message="tns:helloWorld" name="helloWorld"> </wsdl:input>
-            <wsdl:output message="tns:helloWorldResponse" name="helloWorldResponse"> </wsdl:output>
+        <wsdl:operation name="classifyUserData">
+            <wsdl:input message="tns:classifyUserData" name="classifyUserData"></wsdl:input>
+            <wsdl:output message="tns:classifyUserDataResponse" name="classifyUserDataResponse"></wsdl:output>
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="SOAPServerServiceSoapBinding" type="tns:SOAPServer">
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
-        <wsdl:operation name="helloWorld">
+        <wsdl:operation name="classifyUserData">
             <soap:operation soapAction="" style="document"/>
-            <wsdl:input name="helloWorld">
+            <wsdl:input name="classifyUserData">
                 <soap:body use="literal"/>
             </wsdl:input>
-            <wsdl:output name="helloWorldResponse">
+            <wsdl:output name="classifyUserDataResponse">
                 <soap:body use="literal"/>
             </wsdl:output>
         </wsdl:operation>
