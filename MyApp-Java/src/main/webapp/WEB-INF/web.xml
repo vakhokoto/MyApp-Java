@@ -24,4 +24,13 @@
         <url-pattern>/game</url-pattern>
     </servlet-mapping>
 
+<!--    match manipulation servlet-->
+    <servlet>
+        <servlet-name>MatchServlet</servlet-name>
+        <servlet-class>servlets.MatchServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MatchServlet</servlet-name>
+        <url-pattern>/match</url-pattern>
+    </servlet-mapping>
 </web-app>

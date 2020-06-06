@@ -3,23 +3,13 @@
                   xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="SOAPServerService"
                   targetNamespace="http://java.internship.bog.ge/">
     <wsdl:types>
-        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://jaxb.dev.java.net/array"
-                   version="1.0">
-            <xs:complexType final="#all" name="anyTypeArray">
-                <xs:sequence>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="xs:anyType"/>
-                </xs:sequence>
-            </xs:complexType>
-        </xs:schema>
         <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://java.internship.bog.ge/"
-                   xmlns:ns1="http://jaxb.dev.java.net/array" elementFormDefault="unqualified"
-                   targetNamespace="http://java.internship.bog.ge/" version="1.0">
-            <xs:import namespace="http://jaxb.dev.java.net/array"/>
+                   elementFormDefault="unqualified" targetNamespace="http://java.internship.bog.ge/" version="1.0">
             <xs:element name="classifyUserData" type="tns:classifyUserData"/>
             <xs:element name="classifyUserDataResponse" type="tns:classifyUserDataResponse"/>
             <xs:complexType name="classifyUserData">
                 <xs:sequence>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="arg0" type="ns1:anyTypeArray"/>
+                    <xs:element minOccurs="0" name="arg0" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="classifyUserDataResponse">

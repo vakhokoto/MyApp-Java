@@ -3,16 +3,17 @@ package servlets;
 import DB.HibernateSessionConnector;
 import Supplemets.Supplements;
 import SOAPClient.SOAPClient;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import ge.bog.internship.java.SOAPServer;
+import models.Match;
 import models.Player;
-import net.java.dev.jaxb.array.AnyTypeArray;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.omg.CORBA.WrongTransaction;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -52,16 +53,34 @@ public class UserServlet extends HttpServlet implements Supplements {
                     "inner join m.game as g " +
                     "where p.nick = :nick");
             query.setParameter("nick", nick);
-            List<AnyTypeArray> players = query.getResultList();
+            List<Object[]> players = query.getResultList();
 
-            SOAPServer soapServer = SOAPClient.getWS();
-
-            String response = soapServer.classifyUserData(players);
+            String response = clasifyUserData(players);
             writer.print(response);
+            resp.setStatus(HttpServletResponse.SC_OK);
         } catch (Throwable e) {
             logger.error(e.getMessage());
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private String clasifyUserData(List<Object[]> players) {
+        Gson gson = new Gson();
+
+        String response;
+        SOAPServer soapServer = SOAPClient.getWS();
+        int len = players.size();
+        Match arr[] = new Match[len];
+        int curElementNumber = 0;
+        for (Object[] player : players) {
+            for (Object o : player) {
+                if (o instanceof Match) {
+                    arr[curElementNumber++] = (Match) o;
+                }
+            }
+        }
+        response = soapServer.classifyUserData(gson.toJson(arr));
+        return response;
     }
 
     @Override
@@ -113,5 +132,65 @@ public class UserServlet extends HttpServlet implements Supplements {
         jsonObject.addProperty("lastName", lastName);
         jsonObject.addProperty("status", "success");
         writer.print(jsonObject.toString());
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
+        try (Session session = HibernateSessionConnector.getSession()) {
+            Transaction t = session.beginTransaction();
+            PrintWriter writer;
+            try {
+                writer = resp.getWriter();
+            } catch (IOException e) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                logger.error(e.getMessage());
+                return;
+            }
+
+            String nick = req.getParameter("nick");
+            logger.info("deleting user: " + nick + "\n");
+            if (nick == null) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                writer.print("Please provide nick!");
+            }
+
+            Query query = session.createQuery("From Player as p where p.nick = :nick");
+            query.setParameter("nick", nick);
+            List resultList = query.getResultList();
+            if (resultList.size() == 0) {
+                logger.info("no user found with nick: " + nick + "\n");
+                resp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+                return;
+            }
+            Player player = (Player) resultList.get(0);
+
+            int status = makeRemoveUser(player.getId(), session);
+            if (status == -1) {
+                t.rollback();
+                throw new WrongTransaction("Wrong transaction parameters!");
+            }
+            t.commit();
+            resp.setStatus(HttpServletResponse.SC_OK);
+            writer.print("User deleted successfully");
+        } catch (Throwable e) {
+            logger.error(e.getMessage());
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private int makeRemoveUser(long id, Session session) {
+        try {
+            Query query = session.createQuery("delete From Match as m where m.playerId = :id");
+            query.setParameter("id", id);
+            query.executeUpdate();
+
+            query = session.createQuery("delete From Player as p where p.id = :id");
+            query.setParameter("id", id);
+            query.executeUpdate();
+        } catch (Throwable e) {
+            logger.error(e.getMessage());
+            return -1;
+        }
+        return 0;
     }
 }
