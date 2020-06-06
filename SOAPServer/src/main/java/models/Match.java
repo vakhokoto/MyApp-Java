@@ -1,31 +1,17 @@
 package models;
 
-import javax.persistence.*;
-
-@Entity
-@Table(name = "matches")
 public class Match implements Comparable{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
     private long id;
 
-    @Column(name = "game_id")
     private long gameId;
 
-    @Column(name = "score")
     private long score;
 
-    @Column(name = "player_id")
     private long playerId;
 
-    @OneToOne
-    @JoinColumn(name = "game_id", insertable=false, updatable=false)
     private Game game;
 
-    @OneToOne
-    @JoinColumn(name = "player_id", insertable=false, updatable=false)
     private Player player;
 
     public Match(long id, long gameId, long score, long playerId) {
