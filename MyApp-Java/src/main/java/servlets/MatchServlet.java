@@ -64,6 +64,7 @@ public class MatchServlet extends HttpServlet {
             List resultList = query.getResultList();
             listMatch(userNick, gameName, resp, writer, resultList);
         } catch (Throwable e) {
+            logger.error(e.getMessage());
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }

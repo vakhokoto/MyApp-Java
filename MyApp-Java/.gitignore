@@ -140,6 +140,3 @@ buildNumber.properties
 *.xhtml
 
 # End of https://www.gitignore.io/api/web,jboss,maven,intellij
-
-src/main/java/DB/DBConfiguration.java
-src/main/resources/hibernate.cfg.xml
